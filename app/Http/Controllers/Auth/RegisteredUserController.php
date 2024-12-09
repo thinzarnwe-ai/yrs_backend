@@ -37,15 +37,15 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = AdminUser::create([
+        $admin_user = AdminUser::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        event(new Registered($admin_user));
 
-        Auth::login($user);
+        Auth::guard('admin_users')->login($admin_user);
 
         return redirect(RouteServiceProvider::HOME);
     }
